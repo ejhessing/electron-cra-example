@@ -5,6 +5,8 @@
   "main": "electron/main.js",
   "private": true,
   "dependencies": {
+    "electron-log": "^4.4.3",
+    "electron-updater": "4.3.9",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.1"
@@ -20,21 +22,11 @@
     "build": "react-scripts build",
     "build-electron": "mkdir build/src && cp -r electron/. build/electron && cp -r src/shared/. build/src/shared",
     "build-electron-win": "mkdir build/src && robocopy electron build/electron /S & robocopy src/shared build/src/shared /S",
-    "package": "electron-builder build --mac --win -c.extraMetadata.main=build/electron/main.js --publish never",
+    "package": "yarn run pre-package && electron-builder build --mac --win -c.extraMetadata.main=build/electron/main.js -p always",
     "package-win": "electron-builder build --win -c.extraMetadata.main=build/electron/main.js --publish never",
+    "pre-package": "yarn run build && yarn run build-electron",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
-  },
-  "build": {
-    "files": [
-      "build/**/*",
-      "node_modules/**/*"
-    ],
-    "publish": {
-      "provider": "github",
-      "repo": "electron-cra-example",
-      "owner": "johndyer24"
-    }
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -47,6 +39,30 @@
   ],
   "devDependencies": {
     "electron": "^5.0.7",
-    "electron-builder": "^21.1.1"
+    "electron-builder": "^22.10.5"
+  },
+  "build": {
+    "appId": "GameLauncher",
+    "productName": "Erwin React Game Launcher",
+    "files": [
+      "build/**/*",
+      "node_modules/**/*"
+    ],
+    "mac": {
+      "category": "public.app-category.games"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": false
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "Untamed-Isles",
+        "repo": "update-files"
+      }
+    ]
   }
 }
